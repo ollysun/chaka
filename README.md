@@ -4,7 +4,7 @@ clone the project
 chakatest for maven project
 binarygap for the binary test
 
-#chatatest
+# chatatest
 
 You can run the project
 
@@ -16,6 +16,7 @@ http://localhost:8090/transaction
 Payload. make sure the timestamp is within 60 seconds
 else you get 204 error code or future which is 422 code.
 Those with 204 or 422 are not added except 201 created successfully
+# payload
 {
     "amount":"12.3343",
     "timestamp":"2018-07-17T09:59:51.312Z"
