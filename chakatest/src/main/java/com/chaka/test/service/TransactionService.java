@@ -1,8 +1,10 @@
 package com.chaka.test.service;
 
+import com.chaka.test.exception.TransactionException;
 import com.chaka.test.model.TimeDifference;
 import com.chaka.test.model.Transaction;
 import com.chaka.test.model.TransactionStatisticResponse;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,10 @@ public class TransactionService {
         BigDecimal max;
         BigDecimal min;
         BigDecimal sum;
+
+        if (transactionList.isEmpty()) {
+                throw new TransactionException("Empty List");
+        }
         List<Double> amount = new ArrayList<>();
         for (Transaction transaction:transactionList) {
             amount.add(Double.parseDouble(transaction.getAmount()));

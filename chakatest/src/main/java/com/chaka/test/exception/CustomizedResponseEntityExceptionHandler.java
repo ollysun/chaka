@@ -43,7 +43,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     }
 
-    @ExceptionHandler({Exception.class})
+    @ExceptionHandler({TransactionException.class})
     public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
         log.info(ex.getClass().getName());
         log.error("error", ex);
