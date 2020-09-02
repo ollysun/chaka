@@ -1,5 +1,6 @@
 package com.chaka.test.controller;
 
+import com.chaka.test.exception.TransactionException;
 import com.chaka.test.model.Transaction;
 import com.chaka.test.model.TransactionStatisticResponse;
 import com.chaka.test.service.TransactionService;
@@ -37,6 +38,10 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.OK )
     @GetMapping("/statistics")
     public TransactionStatisticResponse getTransactionStatistics() {
+        TransactionStatisticResponse transactionStatisticResponse = transactionService.getTransactionStatistic();
+        if(transactionStatisticResponse  == null){
+            throw new TransactionException("Empty List");
+        }
         return transactionService.getTransactionStatistic();
     }
 

@@ -1,6 +1,5 @@
 package com.chaka.test.service;
 
-import com.chaka.test.exception.TransactionException;
 import com.chaka.test.model.TimeDifference;
 import com.chaka.test.model.Transaction;
 import com.chaka.test.model.TransactionStatisticResponse;
@@ -27,7 +26,7 @@ public class TransactionService {
         BigDecimal sum;
 
         if (transactionList.isEmpty()) {
-                throw new TransactionException("Empty List");
+                return null;
         }
         List<Double> amount = new ArrayList<>();
         for (Transaction transaction:transactionList) {

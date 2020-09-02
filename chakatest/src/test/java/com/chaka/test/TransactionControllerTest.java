@@ -1,6 +1,7 @@
 package com.chaka.test;
 
 import com.chaka.test.controller.TransactionController;
+import com.chaka.test.exception.TransactionException;
 import com.chaka.test.model.Transaction;
 import com.chaka.test.service.TransactionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.sql.Timestamp;
@@ -25,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -98,9 +102,18 @@ public class TransactionControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders
                  .get("/statistics")
+                .accept(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    public void testStatisticsReturnException() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/statistics")
                 .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TransactionException))
+                .andExpect(result -> assertEquals("Empty List", result.getResolvedException().getMessage()));
 
     }
 
