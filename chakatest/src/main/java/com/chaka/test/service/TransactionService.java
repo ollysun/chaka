@@ -3,8 +3,8 @@ package com.chaka.test.service;
 import com.chaka.test.model.TimeDifference;
 import com.chaka.test.model.Transaction;
 import com.chaka.test.model.TransactionStatisticResponse;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -17,6 +17,9 @@ import java.util.*;
 public class TransactionService {
 
     private static List<Transaction> transactionList =  new ArrayList<>();
+
+    @Autowired
+    QueueProducer queueProducer;
 
     public TransactionStatisticResponse getTransactionStatistic(){
 
@@ -51,7 +54,7 @@ public class TransactionService {
 
         double sumValue = amount.stream()
                                 .mapToDouble(Double::doubleValue)
-                                .summaryStatistics().getSum();
+                                .sum();
         sum = BigDecimal.valueOf(sumValue).setScale(2, RoundingMode.HALF_UP);
 
         long countValue = amount.stream()
@@ -81,6 +84,8 @@ public class TransactionService {
             transactionList.add(transaction);
             datestatus = DATESTATUS.SAMEDAY;
         }
+        log.info("Push to queue");
+        queueProducer.send(transaction);
         return datestatus;
     }
 

@@ -40,4 +40,12 @@ public class Transaction implements Serializable {
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "amount='" + amount + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }
