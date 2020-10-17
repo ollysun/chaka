@@ -5,6 +5,7 @@ import com.chaka.test.model.Transaction;
 import com.chaka.test.model.TransactionStatisticResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -19,7 +20,19 @@ public class TransactionService {
     private static List<Transaction> transactionList =  new ArrayList<>();
 
     @Autowired
-    QueueProducer queueProducer;
+    QueueProducerImpl queueProducerImpl;
+
+    @Value("${routing.direct.1}")
+    private String direct1RoutingKey;
+
+    @Value("${routing.direct.2}")
+    private String direct2RoutingKey;
+
+    @Value("${routing.topic.rabbitmq.#}")
+    private String topicRabbitMQRoutingKey;
+
+    @Value("${routing.topic.rabbitmq.spring.#}")
+    private String topicRabbitMQSpringRoutingKey;
 
     public TransactionStatisticResponse getTransactionStatistic(){
 
@@ -85,7 +98,9 @@ public class TransactionService {
             datestatus = DATESTATUS.SAMEDAY;
         }
         log.info("Push to queue");
-        queueProducer.send(transaction);
+        queueProducerImpl.sendToDirectExchange(transaction,direct1RoutingKey);
+        queueProducerImpl.sendToFanoutExchange(transaction);
+        queueProducerImpl.sendToTopicExchange(transaction,topicRabbitMQRoutingKey);
         return datestatus;
     }
 

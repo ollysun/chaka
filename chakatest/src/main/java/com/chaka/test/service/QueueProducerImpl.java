@@ -9,20 +9,32 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class QueueProducer {
+public class QueueProducerImpl implements IQueueProducer{
+
+    @Value("${exchange.direct}")
+    private String directExchange;
+
+    @Value("${exchange.topic}")
+    private String topicExchange;
+
+    @Value("${exchange.fanout}")
+    private String fanoutExchange;
 
     @Autowired
     RabbitTemplate rabbitTemplate;
 
-    @Value("${spring.rabbitmq.template.exchange}")
-    String exchange;
+    @Override
+    public void sendToDirectExchange(Transaction transaction, String routingKey) {
+        rabbitTemplate.convertAndSend(directExchange, routingKey, transaction);
+    }
 
-    @Value("${spring.rabbitmq.template.routing-key}")
-    private String routingKey;
+    @Override
+    public void sendToTopicExchange(Transaction transaction, String topic) {
+        rabbitTemplate.convertAndSend(topicExchange, topic, transaction);
+    }
 
-    public void send(Transaction transaction) {
-        rabbitTemplate.convertAndSend(exchange, routingKey, transaction);
-        log.info("Send msg = " + transaction);
-
+    @Override
+    public void sendToFanoutExchange(Transaction transaction) {
+        rabbitTemplate.convertAndSend(fanoutExchange, "", transaction); // routingKey is ignored
     }
 }

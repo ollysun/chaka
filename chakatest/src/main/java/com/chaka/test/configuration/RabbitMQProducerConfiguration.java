@@ -17,61 +17,124 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableRabbit
-public class RabbitMQConfiguration {
+public class RabbitMQProducerConfiguration {
 
-    @Value("${spring.rabbitmq.template.queue}")
-    String queueName;
+    @Value("${queue.A}")
+    private String queueA;
 
-    @Value("${spring.rabbitmq.template.exchange}")
-    String exchange;
+    @Value("${queue.B}")
+    private String queueB;
 
-    @Value("${spring.rabbitmq.template.routing-key}")
-    String routingKey;
+    @Value("${queue.C}")
+    private String queueC;
+
+    @Value("${queue.D}")
+    private String queueD;
+
+    @Value("${queue.E}")
+    private String queueE;
+
+    @Value("${queue.F}")
+    private String queueF;
+
+
+    @Value("${exchange.direct}")
+    private String directExchange;
+
+    @Value("${exchange.topic}")
+    private String topicExchange;
+
+    @Value("${exchange.fanout}")
+    private String fanoutExchange;
+
+    @Value("${routing.direct.1}")
+    private String direct1RoutingKey;
+
+    @Value("${routing.direct.2}")
+    private String direct2RoutingKey;
+
+    @Value("${routing.topic.rabbitmq.#}")
+    private String topicRabbitMQRoutingKey;
+
+    @Value("${routing.topic.rabbitmq.spring.#}")
+    private String topicRabbitMQSpringRoutingKey;
 
     @Autowired
     private ConnectionFactory connectionFactory;
 
     @Bean
-    Queue queue() {
-        return new Queue(queueName, false);
+    public Queue queueA() {
+        return new Queue(queueA);
     }
 
     @Bean
-    Queue financeQueue() {
-        return new Queue("financeQueue", false);
+    public Queue queueB() {
+        return new Queue(queueB);
     }
 
     @Bean
-    Queue marketingQueue() {
-        return new Queue("marketingQueue", false);
-    }
-
-//    @Bean(direct)
-//    DirectExchange exchange() {
-//        return new DirectExchange(exchange);
-//    }
-
-    @Bean
-    FanoutExchange fanoutExchange() {
-        return new FanoutExchange("fanout-exchange");
-    }
-    @Bean
-    Binding binding(Queue queue, FanoutExchange fanoutExchange) {
-//        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
-        return BindingBuilder.bind(queue).to(fanoutExchange);
+    public Queue queueC() {
+        return new Queue(queueC);
     }
 
     @Bean
-    Binding marketingBinding(Queue marketingQueue, FanoutExchange fanoutExchange) {
-//        return BindingBuilder.bind(marketingQueue).to(exchange).with("marketing");
-        return BindingBuilder.bind(marketingQueue).to(fanoutExchange);
+    public Queue queueD() {
+        return new Queue(queueD);
     }
 
     @Bean
-    Binding financeBinding(Queue financeQueue, FanoutExchange fanoutExchange) {
-//        return BindingBuilder.bind(financeQueue).to(exchange).with("finance");
-        return BindingBuilder.bind(financeQueue).to(fanoutExchange);
+    public Queue queueE() {
+        return new Queue(queueE);
+    }
+
+    @Bean
+    public Queue queueF() {
+        return new Queue(queueF);
+    }
+
+    @Bean
+    public DirectExchange directExchange() {
+        return new DirectExchange(directExchange);
+    }
+
+    @Bean
+    public TopicExchange topicExchange() {
+        return new TopicExchange(topicExchange);
+    }
+
+    @Bean
+    public FanoutExchange fanoutExchange() {
+        return new FanoutExchange(fanoutExchange);
+    }
+
+    @Bean
+    public Binding bindingDirectExchangeQueueADirect1(DirectExchange directExchange, Queue queueA) {
+        return BindingBuilder.bind(queueA).to(directExchange).with(direct1RoutingKey);
+    }
+
+    @Bean
+    public Binding bindingDirectExchangeQueueBDirect2(DirectExchange directExchange, Queue queueB) {
+        return BindingBuilder.bind(queueB).to(directExchange).with(direct2RoutingKey);
+    }
+
+    @Bean
+    public Binding bindingTopicExchangeQueueCTopicRabbitMQ(TopicExchange topicExchange, Queue queueC) {
+        return BindingBuilder.bind(queueC).to(topicExchange).with(topicRabbitMQRoutingKey);
+    }
+
+    @Bean
+    public Binding bindingTopicExchangeQueueDTopicRabbitMQSpring(TopicExchange topicExchange, Queue queueD) {
+        return BindingBuilder.bind(queueD).to(topicExchange).with(topicRabbitMQSpringRoutingKey);
+    }
+
+    @Bean
+    public Binding bindingFanoutExchangeQueueEFanout(FanoutExchange fanoutExchange, Queue queueE) {
+        return BindingBuilder.bind(queueE).to(fanoutExchange);
+    }
+
+    @Bean
+    public Binding bindingFanoutExchangeQueueFFanout(FanoutExchange fanoutExchange, Queue queueF) {
+        return BindingBuilder.bind(queueF).to(fanoutExchange);
     }
 
     @Bean

@@ -9,8 +9,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class QueueRabbitListener {
 
-    @RabbitListener(queues = "${spring.rabbitmq.template.queue}")
-    public void receivedMessage(Transaction employee) {
-        log.info("Received Message From RabbitMQListener: " + employee);
-    }
+//    @RabbitListener(queues = "testQueue")
+//    public void receivedTestQueueMessage(Transaction employee) {
+//        log.info("Received Message From RabbitMQListener: " + employee);
+//    }
+//
+//    @RabbitListener(queues = "financeQueue")
+//    public void receivedFinanceQueueMessage(Transaction employee) {
+//        log.info("Received Message From RabbitMQListener: " + employee);
+//    }
+//
+//    @RabbitListener(queues = "marketingQueue")
+//    public void receivedMarketingQueueMessage(Transaction employee) {
+//        log.info("Received Message From RabbitMQListener: " + employee);
+//    }
 }
