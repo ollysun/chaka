@@ -2,7 +2,9 @@
 clone the project
 
 chakatest for maven project
-binarygap for the binary test
+
+This is a production project to check the transaction , statictics. The tech stack include springboot, spring security, h2, maven.
+Also, binarygap Answer
 
 # chatatest
 
